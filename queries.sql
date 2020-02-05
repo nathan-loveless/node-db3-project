@@ -26,3 +26,11 @@ FROM [order]
 JOIN Customer
 JOIN Employee
 WHERE [order].EmployeeId = Employee.Id AND [order].CustomerId = Customer.Id
+
+-- Displays CategoryName and a new column called Count that shows how many products are in each category. Shows 8 records.
+select c.CategoryName as category, count(p.productName)
+from product as p
+join category as c
+on p.categoryid = c.id
+group by c.categoryname
+order by c.categoryname
