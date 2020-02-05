@@ -48,10 +48,16 @@ router.get('/:id/steps', (req, res) => {
 
 router.post('/', (req, res) => {
   const schemeData = req.body;
-
   Schemes.add(schemeData)
   .then(scheme => {
-    res.status(201).json(scheme);
+    Schemes.findById(scheme[0])
+      .then(data => {
+        res.status(201).json(data);
+      })
+      .catch(err => {
+        res.status(500).json({message: 'Failed to get scheme object'})
+      })
+    
   })
   .catch (err => {
     res.status(500).json({ message: 'Failed to create new scheme' });
@@ -87,7 +93,13 @@ router.put('/:id', (req, res) => {
     if (scheme) {
       Schemes.update(changes, id)
       .then(updatedScheme => {
-        res.json(updatedScheme);
+        Schemes.findById(id)
+        .then(data => {
+          res.json(data);
+        }) 
+        .catch(err => { 
+          res.status(500).json({message: 'Unable to display updated object'})
+        })       
       });
     } else {
       res.status(404).json({ message: 'Could not find scheme with given id' });
